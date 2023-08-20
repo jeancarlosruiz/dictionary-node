@@ -12,6 +12,7 @@ const main = async () => {
       case 1:
         const wordSearched = await readInput('Enter a word: ')
         const data = await search.searchWord(wordSearched)
+        search.saveWord(wordSearched)
 
         console.log(data)
 
@@ -48,7 +49,15 @@ const main = async () => {
         console.log(colors.green('============================'))
         break
       case 2:
-        console.log('option 2')
+        if (search.historial.length === 0) {
+          console.log('➡️  No search history 😭')
+          console.log('➡️  Try searching for a word first 😊')
+        } else {
+          search.historial.forEach((word, i) => {
+            const index = `${i + 1}.`.green
+            console.log(`${index} ${word}`)
+          })
+        }
         break
     }
 

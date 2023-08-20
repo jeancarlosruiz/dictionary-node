@@ -21,7 +21,8 @@
   "eslintConfig": {
     "extends": "./node_modules/standard/eslintrc.json",
     "rules": {
-      "no-case-declarations": "off"
+      "no-case-declarations": "off",
+      "no-unused-vars": "warn"
     }
   }
 }

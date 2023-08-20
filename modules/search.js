@@ -1,11 +1,13 @@
+import fs from 'node:fs'
 import axios from 'axios'
-import colors from 'colors'
 
 class Search {
-  // TODO:
-//   constructor () {
-  // this.searchWord()
-//   }
+  historial = []
+  path = './db/historial.json'
+
+  constructor () {
+    this.readDB()
+  }
 
   async searchWord (word) {
     try {
@@ -18,21 +20,32 @@ class Search {
     }
   }
 
-  //   async meanings () {
-  //     const { meanings } = await this.searchWord()
+  saveWord (word) {
+    if (this.historial.includes(word)) return
 
-  //     meanings.forEach(meaning => {
-  //       const { partOfSpeech, definitions } = meaning
+    this.historial = this.historial.splice(0, 5)
 
-//       console.log(colors.green('============================'))
-//       console.log(colors.green('Part of speech: ') + partOfSpeech)
-//       console.log(colors.green('============================'))
-//       console.log(colors.green('Definitions:'))
-//       definitions.slice(0, 3).forEach((definition) => {
-//         console.log(colors.green('➡️ ') + definition.definition)
-//       })
-//     })
-//   }
+    this.historial.unshift(word)
+
+    this.saveDB()
+  }
+
+  saveDB () {
+    const payload = {
+      historial: this.historial
+    }
+
+    fs.writeFileSync(this.path, JSON.stringify(payload))
+  }
+
+  readDB () {
+    if (!fs.existsSync(this.path)) return
+
+    const info = fs.readFileSync(this.path, { encoding: 'utf-8' })
+    const data = JSON.parse(info)
+
+    this.historial = data.historial
+  }
 }
 
 export default Search
