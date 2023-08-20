@@ -54,12 +54,12 @@ export const readInput = async (message) => {
   return desc
 }
 
-export const pause = async () => {
+export const pause = async (opt) => {
   const question = [
     {
       type: 'input',
       name: 'enter',
-      message: `Press ${colors.green('ENTER')} to go back to the main menu`
+      message: opt !== 0 ? `Press ${colors.green('ENTER')} to continue` : `Press ${colors.green('ENTER')} to exit`
     }
   ]
 

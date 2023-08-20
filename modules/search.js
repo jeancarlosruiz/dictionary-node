@@ -3,6 +3,7 @@ import axios from 'axios'
 
 class Search {
   historial = []
+  data = {}
   path = './db/historial.json'
 
   constructor () {
@@ -11,19 +12,19 @@ class Search {
 
   async searchWord (word) {
     try {
-      // https://api.dictionaryapi.dev/api/v2/entries/en/
       const { data } = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
 
-      return data[0]
+      this.data = data
     } catch (error) {
-      console.log(error)
+      this.data = error.response.data
     }
   }
 
   saveWord (word) {
     if (this.historial.includes(word)) return
 
-    this.historial = this.historial.splice(0, 5)
+    // Only save the last 5 words
+    this.historial = this.historial.splice(0, 4)
 
     this.historial.unshift(word)
 

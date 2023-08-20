@@ -11,42 +11,55 @@ const main = async () => {
     switch (opt) {
       case 1:
         const wordSearched = await readInput('Enter a word: ')
-        const data = await search.searchWord(wordSearched)
-        search.saveWord(wordSearched)
+        await search.searchWord(wordSearched)
 
-        console.log(data)
+        // console.log(search.data)
 
-        const { word, meanings, sourceUrls } = data
+        if (search.data.length > 0) {
+          const { word, meanings, sourceUrls } = search.data[0]
 
-        console.log(colors.green('============================'))
-        console.log(colors.green('Word: ') + word)
-        console.log(colors.green('============================\n'))
-
-        console.log(colors.green('Meanings:'))
-
-        meanings.forEach(meaning => {
-          const { partOfSpeech, definitions } = meaning
+          search.saveWord(word)
 
           console.log(colors.green('============================'))
-          console.log(colors.green('Part of speech: ') + partOfSpeech)
+          console.log(colors.green('Word: ') + word)
           console.log(colors.green('============================'))
-          console.log(colors.green('Definitions:'))
-          definitions.slice(0, 3).forEach((definition) => {
-            console.log('➡️ ' + colors.blue(definition.definition))
 
-            if (definition.synonyms.length > 0) {
-              console.log(colors.red('>>>> Synonyms: ') + definition.synonyms.join(', '))
-            }
+          console.log(colors.green('Meanings:'))
 
-            if (definition.antonyms.length > 0) {
-              console.log(colors.red('>>>> Synonyms: ') + definition.synonyms.join(', '))
-            }
+          meanings.forEach(meaning => {
+            const { partOfSpeech, definitions } = meaning
+
+            console.log(colors.green('============================'))
+            console.log(colors.green('Part of speech: ') + partOfSpeech)
+            console.log(colors.green('============================'))
+            console.log(colors.green('Definitions:'))
+            definitions.slice(0, 3).forEach((definition) => {
+              console.log('➡️  ' + colors.blue(definition.definition))
+
+              if (definition.synonyms.length > 0) {
+                console.log(colors.red('>>>> Synonyms: ') + definition.synonyms.join(', '))
+              }
+
+              if (definition.antonyms.length > 0) {
+                console.log(colors.red('>>>> Antonyms: ') + definition.synonyms.join(', '))
+              }
+            })
           })
-        })
 
-        console.log(colors.green('============================'))
-        console.log(colors.green('Source: ') + sourceUrls[0])
-        console.log(colors.green('============================'))
+          console.log(colors.green('============================'))
+          console.log(colors.green('Source: ') + sourceUrls[0])
+          console.log(colors.green('============================'))
+        } else {
+          const { title, message, resolution } = search.data
+
+          console.log(colors.red('============================'))
+          console.log(`${colors.red(title)} 😭`)
+          console.log(colors.red('============================'))
+          console.log(colors.white(message))
+          console.log(colors.white(resolution))
+          console.log(colors.red('============================'))
+        }
+
         break
       case 2:
         if (search.historial.length === 0) {
@@ -61,7 +74,7 @@ const main = async () => {
         break
     }
 
-    await pause()
+    await pause(opt)
   } while (opt !== 0)
 }
 
